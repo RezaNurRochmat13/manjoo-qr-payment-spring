@@ -1,13 +1,13 @@
 services:
   postgres:
     image: postgres:15
-    container_name: java-boilerplate-postgres
+    container_name: manjoo-postgres
     environment:
-      POSTGRES_USER: java-boilerplate
-      POSTGRES_PASSWORD: java-boilerplate
-      POSTGRES_DB: java-boilerplate-db
+      POSTGRES_USER: manjoo
+      POSTGRES_PASSWORD: manjoo
+      POSTGRES_DB: manjoo-db
     ports:
-      - "5434:5432"
+      - "5439:5432"
     volumes:
       - java_postgres_data:/var/lib/postgresql/data
 

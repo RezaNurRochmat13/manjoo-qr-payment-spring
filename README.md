@@ -1,6 +1,6 @@
-# 🌱 Spring Boot Boilerplate Template
+# 🌱 Manjoo QR Payment Service
 
-A clean and modular Spring Boot boilerplate to kickstart your next project using best practices for scalable architecture.
+Manjoo QR Payment Service example
 
 ---
 
@@ -22,8 +22,8 @@ Ensure you have the following installed:
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/your-username/spring-boot-boilerplate.git
-cd spring-boot-boilerplate
+git clone https://github.com/your-username/manjoo-qr-payment.git
+cd manjoo-qr-payment
 
 # 2. Build the project
 mvn clean install
