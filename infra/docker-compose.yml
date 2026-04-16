@@ -1,15 +1,15 @@
 services:
   postgres:
     image: postgres:15
-    container_name: manjoo-postgres
+    container_name: manjo-postgres
     environment:
-      POSTGRES_USER: manjoo
-      POSTGRES_PASSWORD: manjoo
-      POSTGRES_DB: manjoo-db
+      POSTGRES_USER: manjo
+      POSTGRES_PASSWORD: manjo
+      POSTGRES_DB: manjo-db
     ports:
-      - "5439:5432"
+      - "5450:5432"
     volumes:
-      - java_postgres_data:/var/lib/postgresql/data
+      - manjo_postgres_data:/var/lib/postgresql/data
 
   minio:
     image: minio/minio:latest
@@ -25,5 +25,5 @@ services:
     command: server --console-address ":9001" /data
 
 volumes:
-  java_postgres_data:
+  manjo_postgres_data:
   minio_data:
