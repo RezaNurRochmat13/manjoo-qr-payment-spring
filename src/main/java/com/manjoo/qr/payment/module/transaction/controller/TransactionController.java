@@ -39,7 +39,7 @@ public class TransactionController {
         return ResponseEntity.ok(transactionService.generateQr(request));
     }
 
-    @PostMapping("/payment")
+    @PostMapping("/qr/payment")
     public ResponseEntity<?> paymentCallback(
             @RequestHeader("X-Signature") String signature,
             @RequestBody PaymentCallbackRequestDto request) {
@@ -56,5 +56,21 @@ public class TransactionController {
             errorResponse.put("responseMessage", "Transaction not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         }
+    }
+
+    @GetMapping("/qr/status")
+    public ResponseEntity<?> getStatus(
+            @RequestHeader("X-Signature") String signature,
+            @RequestParam("referenceNumber") String referenceNumber
+    ) {
+        if (!signatureUtil.isValid(referenceNumber, signature)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("responseCode", "4044700");
+        response.put("data", transactionService.findTransactionByReferenceNumber(referenceNumber));
+
+        return ResponseEntity.ok(response);
     }
 }

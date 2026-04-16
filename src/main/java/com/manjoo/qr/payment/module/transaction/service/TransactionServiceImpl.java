@@ -61,4 +61,10 @@ public class TransactionServiceImpl implements TransactionService {
 
         return response;
     }
+
+    @Override
+    public Transaction findTransactionByReferenceNumber(String referenceNumber) {
+        return transactionRepository.findByReferenceNumber(referenceNumber)
+                .orElseThrow(() -> new RuntimeException("Transaction not found"));
+    }
 }
