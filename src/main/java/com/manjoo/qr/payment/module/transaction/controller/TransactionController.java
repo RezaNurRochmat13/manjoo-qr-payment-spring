@@ -1,5 +1,7 @@
 package com.manjoo.qr.payment.module.transaction.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.manjoo.qr.payment.module.transaction.dto.GenerateQrRequestDto;
 import com.manjoo.qr.payment.module.transaction.dto.PaymentCallbackRequestDto;
 import com.manjoo.qr.payment.module.transaction.service.TransactionServiceImpl;
@@ -21,6 +23,8 @@ public class TransactionController {
 
     @Autowired
     private SignatureUtil signatureUtil;
+    
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @PostMapping("/qr/generate")
     public ResponseEntity<?> generateQr(
@@ -28,8 +32,14 @@ public class TransactionController {
             @RequestBody GenerateQrRequestDto request,
             HttpServletRequest servletRequest) {
 
-        if (!signatureUtil.isValid(request.toString(), signature)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        try {
+            String jsonPayload = objectMapper.writeValueAsString(request);
+
+            if (!signatureUtil.isValid(jsonPayload, signature)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+        } catch (JsonProcessingException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
         if (Double.parseDouble(request.getAmount().getValue()) <= 0) {
@@ -44,8 +54,14 @@ public class TransactionController {
             @RequestHeader("X-Signature") String signature,
             @RequestBody PaymentCallbackRequestDto request) {
 
-        if (!signatureUtil.isValid(request.toString(), signature)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        try {
+            String jsonPayload = objectMapper.writeValueAsString(request);
+
+            if (!signatureUtil.isValid(jsonPayload, signature)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+        } catch (JsonProcessingException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
         try {
@@ -58,18 +74,17 @@ public class TransactionController {
         }
     }
 
-    @GetMapping("/qr/status")
-    public ResponseEntity<?> getStatus(
-            @RequestHeader("X-Signature") String signature,
-            @RequestParam("referenceNumber") String referenceNumber
+    @GetMapping("/qr/transactions")
+    public ResponseEntity<?> getQrTransactions(
+            @RequestHeader("X-Signature") String signature
     ) {
-        if (!signatureUtil.isValid(referenceNumber, signature)) {
+        if (!signatureUtil.isValid("GET_ALL", signature)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
         Map<String, Object> response = new HashMap<>();
-        response.put("responseCode", "4044700");
-        response.put("data", transactionService.findTransactionByReferenceNumber(referenceNumber));
+        response.put("responseCode", "2004700");
+        response.put("data", transactionService.findAllTransactions());
 
         return ResponseEntity.ok(response);
     }

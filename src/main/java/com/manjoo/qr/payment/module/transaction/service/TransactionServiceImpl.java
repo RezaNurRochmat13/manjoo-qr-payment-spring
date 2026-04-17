@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -63,8 +64,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Transaction findTransactionByReferenceNumber(String referenceNumber) {
-        return transactionRepository.findByReferenceNumber(referenceNumber)
-                .orElseThrow(() -> new RuntimeException("Transaction not found"));
+    public List<Transaction> findAllTransactions() {
+        return transactionRepository.findAll();
     }
 }
