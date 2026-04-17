@@ -75,6 +75,7 @@ public class TransactionController {
     }
 
     @GetMapping("/qr/transactions")
+    @CrossOrigin(origins = "*")
     public ResponseEntity<?> getQrTransactions(
             @RequestHeader("X-Signature") String signature
     ) {
